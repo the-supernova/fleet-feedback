@@ -3,11 +3,14 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
 import { cert } from "firebase-admin/app";
-const serviceJSON = require("../../../lib/fleet-feedback-firebase-adminsdk-zzuia-9aefeb531b.json")
 
 export default NextAuth({
     adapter: FirestoreAdapter({
-        credential: cert(serviceJSON),
+        credential: cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        }),
     }),
     providers: [
         GoogleProvider({
