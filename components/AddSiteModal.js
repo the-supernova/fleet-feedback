@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useSWRConfig } from "swr";
 import {
   Modal,
   ModalOverlay,
@@ -13,25 +14,59 @@ import {
   Input,
   useDisclosure,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { createSite } from "../lib/db";
+import { useSession } from "next-auth/react";
 
-export default function AddSiteModal() {
+export default function AddSiteModal({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: session } = useSession();
+  const { mutate } = useSWRConfig();
 
   const initialRef = useRef(null);
+  const toast = useToast();
 
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
-  const createSiteUtil = (values) => createSite(values);
+
+  const createSiteUtil = (values) => {
+    const newSite = {
+      authorId: session.user.email,
+      createdAt: new Date().toISOString(),
+      ...values,
+    }
+    createSite(newSite);
+    toast({
+      title: "Success!.",
+      description: "We've added your site.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    mutate("/api/sites", async data => {
+      return { sites: [...data.sites, newSite] }
+    }, false);
+    onClose();
+  };
 
   return (
     <>
-      <Button fontWeight="medium" maxW="200px" onClick={onOpen}>
-        Add Your First Site
+      <Button
+        onClick={onOpen}
+        backgroundColor="gray.900"
+        color="white"
+        fontWeight="medium"
+        _hover={{ bg: "gray.700" }}
+        _active={{
+          bg: "gray.800",
+          transform: "scale(0.95)",
+        }}
+      >
+        {children}
       </Button>
 
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -45,7 +80,7 @@ export default function AddSiteModal() {
               <Input
                 ref={initialRef}
                 placeholder="My site"
-                {...register("site", {
+                {...register("name", {
                   required: "Required",
                 })}
               />
@@ -66,11 +101,7 @@ export default function AddSiteModal() {
             <Button onClick={onClose} mr={3} fontWeight="medium">
               Cancel
             </Button>
-            <Button
-              type="submit"
-              backgroundColor="#99FFFE"
-              color="#194D4C"
-            >
+            <Button type="submit" backgroundColor="#99FFFE" color="#194D4C">
               Create
             </Button>
           </ModalFooter>

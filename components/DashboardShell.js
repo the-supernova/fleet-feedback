@@ -1,53 +1,70 @@
 import {
   Avatar,
+  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
   Flex,
   Heading,
   Icon,
   Link,
-  Stack,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+
+import { signOut, useSession } from "next-auth/react";
+import AddSiteModal from "./AddSiteModal";
 
 export default function DashboardShell({ children }) {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
+
   return (
-    <Flex flexDirection="column">
-      <Flex
-        backgroundColor="white"
-        alignItems="center"
-        justifyContent="space-between"
-        py={4}
-        px={8}
-      >
-        <Stack isInline spacing={4} align="center">
-          <Icon viewBox="0 0 46 32" color="black" boxSize="24px">
-            <path
-              d="M19.557.113C11.34.32 9.117 8.757 9.03 12.95c1.643-2.67 4.62-3.08 6.931-3.08 2.825.085 10.27.205 17.458 0C40.61 9.663 44.802 3.28 46 .112c-5.391-.085-18.228-.205-26.443 0zM14.422 14.234C3.332 14.234-.468 24.76.045 31.948c3.594-6.418 7.617-7.53 9.243-7.445h6.675c5.956 0 11.039-6.846 12.836-10.27H14.422z"
-              fill="currentColor"
-            />
-          </Icon>
-          <Link>Feedback</Link>
-          <Link>Sites</Link>
-        </Stack>
-        <Flex alignItems="center">
-          <Link mr={4}>Account</Link>
-          <Avatar size="sm" src={session?.user.image} />
+    <Box backgroundColor="gray.100" h="100vh">
+      <Flex backgroundColor="white" mb={[8, 16]} w="full">
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          pt={4}
+          pb={4}
+          maxW="1250px"
+          margin="0 auto"
+          w="full"
+          px={8}
+          h="60px"
+        >
+          <Flex align="center">
+            <Icon viewBox="0 0 46 32" color="black" boxSize="24px" mr={8}>
+              <path
+                d="M19.557.113C11.34.32 9.117 8.757 9.03 12.95c1.643-2.67 4.62-3.08 6.931-3.08 2.825.085 10.27.205 17.458 0C40.61 9.663 44.802 3.28 46 .112c-5.391-.085-18.228-.205-26.443 0zM14.422 14.234C3.332 14.234-.468 24.76.045 31.948c3.594-6.418 7.617-7.53 9.243-7.445h6.675c5.956 0 11.039-6.846 12.836-10.27H14.422z"
+                fill="currentColor"
+              />
+            </Icon>
+            <Link mr={4}>Sites</Link>
+            <Link>Feedback</Link>
+          </Flex>
+          <Flex justifyContent="center" alignItems="center">
+            {session && (
+              <Button variant="ghost" mr={2} onClick={() => signOut()}>
+                Log Out
+              </Button>
+            )}
+            <Avatar size="sm" src={session?.user.image} />
+          </Flex>
         </Flex>
       </Flex>
-      <Flex backgroundColor="gray.100" p={8} height="100vh">
-        <Flex maxWidth="800px" w="100%" ml="auto" mr="auto" direction="column">
-          <Breadcrumb>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink color="gray.700" fontSize="sm">Sites</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          <Heading color="black" mb={4}>My Sites</Heading>
-          {children}
+      <Flex margin="0 auto" direction="column" maxW="1250px" px={[0, 8, 8]}>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink>Sites</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <Flex justifyContent="space-between">
+          <Heading mb={8}>My Sites</Heading>
+          <AddSiteModal>
+            + Add Site
+          </AddSiteModal>
         </Flex>
+        {children}
       </Flex>
-    </Flex>
+    </Box>
   );
 }
