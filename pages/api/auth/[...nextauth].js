@@ -22,5 +22,20 @@ export default NextAuth({
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
         }),
     ],
-    secret: process.env.JWT_SECRET
+    secret: process.env.JWT_SECRET,
+    callbacks: {
+        async jwt({ token, account }) {
+            if (account) {
+                return { ...token, provider: account.provider };
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            session.user = { ...session.user, uid: token.sub, provider: token.provider };
+            return session;
+        }
+    },
+    session: {
+        strategy: "jwt",
+    }
 });

@@ -1,5 +1,4 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
-import DashboardShell from "./DashboardShell";
 import AddSiteModal from "./AddSiteModal";
 
 export default function EmptyState() {

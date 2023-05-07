@@ -35,7 +35,7 @@ export default function AddSiteModal({ children }) {
 
   const createSiteUtil = (values) => {
     const newSite = {
-      authorId: session.user.email,
+      authorId: session.user.uid,
       createdAt: new Date().toISOString(),
       ...values,
     }

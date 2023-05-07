@@ -1,14 +1,11 @@
-import { collection, getDocs } from 'firebase/firestore';
-import db from "../../lib/firebase"
+import { getAllSites } from '../../lib/db-admin';
 
 export default async (_, res) => {
-    const sitesDB = collection(db, 'sites');
-    const snapshot = await getDocs(sitesDB);
-    const sites = [];
+    const {sites, err} = await getAllSites();
 
-    snapshot.forEach((doc) => {
-        sites.push({ id: doc.id, ...doc.data() });
-    });
-
+    if (err) {
+        res.status(500).json({ err });
+    }
+    
     res.status(200).json({ sites });
 }
