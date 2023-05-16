@@ -47,7 +47,7 @@ export default function AddSiteModal({ children }) {
       duration: 5000,
       isClosable: true,
     });
-    mutate("/api/sites", async data => {
+    mutate(["/api/sites"], async data => {
       return { sites: [...data.sites, newSite] }
     }, false);
     onClose();

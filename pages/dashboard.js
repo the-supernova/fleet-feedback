@@ -9,9 +9,9 @@ import SiteTable from "../components/SiteTable";
 export default function Dashboard() {
     const { data: session } = useSession();
 
-    const { data, isLoading } = useSWR('/api/sites', fetcher);
+    const { data, isLoading } = useSWR(session ? ['/api/sites'] : null, fetcher);
 
-    if(isLoading) return (
+    if(!data || isLoading) return (
         <DashboardShell>
             <SiteTableSkeleton />
         </DashboardShell>
