@@ -7,11 +7,11 @@ export default function App({
   pageProps: { session, ...pageProps },
 }) {
   return (
-    <ChakraProvider theme={extendTheme(customTheme)}>
-      <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <ChakraProvider theme={extendTheme(customTheme)}>
         <CSSReset />
         <Component {...pageProps} />
-      </SessionProvider>
-    </ChakraProvider>
+      </ChakraProvider>
+    </SessionProvider>
   );
 }

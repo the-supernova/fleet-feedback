@@ -1,7 +1,7 @@
 import { getUserSites } from "../../lib/db-admin";
 import { getToken } from "next-auth/jwt";
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   try {
     const token = await getToken({ req, secret: process.env.JWT_SECRET });
     const uid = token?.sub;

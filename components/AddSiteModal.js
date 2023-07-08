@@ -33,13 +33,13 @@ export default function AddSiteModal({ children }) {
     formState: { errors },
   } = useForm();
 
-  const createSiteUtil = (values) => {
+  const createSiteUtil = async (values) => {
     const newSite = {
       authorId: session.user.uid,
       createdAt: new Date().toISOString(),
       ...values,
-    }
-    createSite(newSite);
+    };
+    const { id } = await createSite(newSite);
     toast({
       title: "Success!.",
       description: "We've added your site.",
@@ -47,9 +47,11 @@ export default function AddSiteModal({ children }) {
       duration: 5000,
       isClosable: true,
     });
-    mutate(["/api/sites"], async data => {
-      return { sites: [...data.sites, newSite] }
-    }, false);
+    mutate(
+      ["/api/sites"],
+      async (data) => ({ sites: [{ id, ...newSite }, ...data.sites] }),
+      false
+    );
     onClose();
   };
 

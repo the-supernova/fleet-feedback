@@ -1,6 +1,6 @@
 import { getAllFeedback } from "../../../lib/db-admin";
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   const siteId = req.query.siteId;
   const { feedback, err } = await getAllFeedback(siteId);
   if (err) {
