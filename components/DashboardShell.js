@@ -41,7 +41,7 @@ export default function DashboardShell({ children }) {
           </Flex>
           <Flex justifyContent="center" alignItems="center">
             {session && (
-              <Button variant="ghost" mr={2} onClick={() => signOut()}>
+              <Button variant="ghost" mr={2} onClick={() => signOut({ callbackUrl: '/' })}>
                 Log Out
               </Button>
             )}
