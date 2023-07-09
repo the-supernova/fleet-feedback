@@ -11,7 +11,7 @@ const nextConfig = {
             key: "next-auth.session-token",
           },
         ],
-        destination: "/dashboard",
+        destination: "/sites",
         permanent: false,
       },
     ];

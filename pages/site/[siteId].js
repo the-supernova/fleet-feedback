@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { createFeedback } from "../../lib/db";
+import DashboardShell from "../../components/DashboardShell";
 
 export async function getStaticProps(context) {
   const siteId = context.params.siteId;
@@ -54,33 +55,34 @@ const SiteFeedback = ({ initialFeedback }) => {
     createFeedback(newFeedback);
   };
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      width="full"
-      maxWidth="700px"
-      margin="0 auto"
-    >
-      <Box as="form" onSubmit={handleSubmit}>
-        <FormControl my={8}>
-          <FormLabel>Comment</FormLabel>
-          <Input ref={inputEl} type="text" />
-          <Button
-            mt={2}
-            type="submit"
-            fontWeight="medium"
-            isDisabled={router.isFallback}
-          >
-            Add Comment
-          </Button>
-        </FormControl>
+    <DashboardShell>
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="full"
+        maxWidth="700px"
+        margin="0 auto"
+      >
+        <Box as="form" onSubmit={handleSubmit}>
+          <FormControl my={8}>
+            <FormLabel>Comment</FormLabel>
+            <Input ref={inputEl} type="text" />
+            <Button
+              mt={2}
+              type="submit"
+              fontWeight="medium"
+              isDisabled={router.isFallback}
+            >
+              Add Comment
+            </Button>
+          </FormControl>
+        </Box>
+        {allFeedback &&
+          allFeedback.map((feedback) => (
+            <Feedback key={feedback.id} {...feedback} />
+          ))}
       </Box>
-
-      {allFeedback &&
-        allFeedback.map((feedback) => (
-          <Feedback key={feedback.id} {...feedback} />
-        ))}
-    </Box>
+    </DashboardShell>
   );
 };
 

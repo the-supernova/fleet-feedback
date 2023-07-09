@@ -36,7 +36,7 @@ export default function DashboardShell({ children }) {
                 />
               </Icon>
             </NextLink>
-            <Link as={NextLink} href='/dashboard' mr={4}>Sites</Link>
+            <Link as={NextLink} href='/sites' mr={4}>Sites</Link>
             <Link as={NextLink} href='/feedback'>Feedback</Link>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
