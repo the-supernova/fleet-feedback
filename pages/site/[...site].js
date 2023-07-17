@@ -1,58 +1,39 @@
 import { Box, Button, FormControl, Textarea } from "@chakra-ui/react";
 import Feedback from "../../components/Feedback";
-import { getAllFeedback, getAllSites, getSite } from "../../lib/db-admin";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { createFeedback } from "../../lib/db";
 import DashboardShell from "../../components/DashboardShell";
 import LoginButtons from "../../components/LoginButtons";
 import SiteFeedbackTableHeader from "../../components/SiteFeedbackTableHeaders";
+import fetcher from "../../utils/fetcher";
+import useSWR, { useSWRConfig } from "swr";
 
-export async function getStaticProps(context) {
-  const [siteId, route] = context.params.site;
-  const { feedback } = await getAllFeedback(siteId, route);
-  const { site } = await getSite(siteId);
-
-  return {
-    props: {
-      initialFeedback: feedback,
-      site,
-    },
-    revalidate: 1,
-  };
-}
-
-export async function getStaticPaths() {
-  const { sites } = await getAllSites();
-  const paths = sites.map((site) => ({
-    params: {
-      site: [site.id.toString()],
-    },
-  }));
-
-  return {
-    paths,
-    fallback: true,
-  };
-}
-
-const FeedbackPage = ({ initialFeedback, site }) => {
+const FeedbackPage = () => {
+  const { mutate } = useSWRConfig();
   const { data: session, status } = useSession();
   const router = useRouter();
   const inputEl = useRef(null);
-  const [allFeedback, setAllFeedback] = useState(initialFeedback);
-  const [siteId, route] = router.query.site;
+  const siteAndRoute = router.query?.site;
+  const siteId = siteAndRoute ? siteAndRoute[0] : null;
+  const route = siteAndRoute ? siteAndRoute[1] : null;
+  const feedbackApi = route
+    ? `/api/feedback/${siteId}/${route}`
+    : `/api/feedback/${siteId}`;
 
-  useEffect(() => {
-    setAllFeedback(initialFeedback);
-  }, [initialFeedback]);
+  const { data: siteData } = useSWR(`/api/site/${siteId}`, fetcher);
+  const { data: feedbackData } = useSWR(feedbackApi, fetcher);
+
+  const site = siteData?.site;
+  const allFeedback = feedbackData?.feedback;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newFeedback = {
       siteId,
+      siteAuthorId: site.authorId,
       route: route || "/",
       author: session.user.name,
       authorId: session.user.uid,
@@ -63,8 +44,12 @@ const FeedbackPage = ({ initialFeedback, site }) => {
     };
 
     inputEl.current.value = "";
-    setAllFeedback([newFeedback, ...allFeedback]);
     createFeedback(newFeedback);
+    mutate(
+      feedbackApi,
+      async (data) => ({ feedback: [newFeedback, ...data.feedback] }),
+      false
+    );
   };
 
   const LoginOrLeaveFeedback = () => {
@@ -84,19 +69,19 @@ const FeedbackPage = ({ initialFeedback, site }) => {
           }}
           mt={4}
           fontWeight="medium"
-          isDisabled={router.isFallback}
+          isDisabled={!siteData || !feedbackData}
         >
           Leave Feedback
         </Button>
       );
     }
     return <LoginButtons />;
-  }
+  };
 
   return (
     <DashboardShell>
       <SiteFeedbackTableHeader
-        isSiteOwner={true}
+        isSiteOwner={site?.authorId === session?.user?.uid}
         site={site}
         siteId={siteId}
         route={route}
@@ -115,7 +100,7 @@ const FeedbackPage = ({ initialFeedback, site }) => {
               id="comment"
               placeholder="Leave a comment"
               h="100px"
-              colorScheme="blue"
+              isDisabled={!session}
             />
             <LoginOrLeaveFeedback />
           </FormControl>

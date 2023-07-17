@@ -41,7 +41,7 @@ export default function EditSiteModal({ settings, siteId, children }) {
       isClosable: true,
     });
     mutate(
-      ["/api/sites"]
+      [`/api/sites/${siteId}`],
     );
     onClose();
   };
