@@ -2,10 +2,12 @@ import { Box, Link } from "@chakra-ui/react";
 import { Table, Tr, Th, Td } from "./Table";
 import { format, parseISO } from "date-fns";
 import NextLink from "next/link";
+import DeleteFeedbackButton from "./DeleteFeedbackButton";
+import DeleteSiteButton from "./DeleteSiteButton";
 
 const SiteTable = ({ sites }) => {
   return (
-    <>
+    <Box overflowX={'scroll'}>
       <Table w={"full"}>
         <thead>
           <Tr>
@@ -46,11 +48,12 @@ const SiteTable = ({ sites }) => {
                 </Link>
               </Td>
               <Td>{format(parseISO(site.createdAt), "PPpp")}</Td>
+              <Td><DeleteSiteButton siteId={site.id} /></Td>
             </Box>
           ))}
         </tbody>
       </Table>
-    </>
+    </Box>
   );
 };
 

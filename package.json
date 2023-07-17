@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
     "@chakra-ui/react": "^2.6.1",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
@@ -19,6 +20,7 @@
     "firebase": "^9.21.0",
     "firebase-admin": "^11.7.0",
     "framer-motion": "^10.12.7",
+    "iframe-resizer": "^4.3.6",
     "next": "13.3.1",
     "next-auth": "^4.22.1",
     "react": "18.2.0",

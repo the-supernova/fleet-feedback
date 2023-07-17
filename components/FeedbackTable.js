@@ -1,9 +1,10 @@
 import { Table, Tr, Th } from "./Table";
 import FeedbackRow from "./FeedbackRow";
+import { Box } from "@chakra-ui/react";
 
 const FeedbackTable = ({ allFeedback }) => {
   return (
-    <>
+    <Box overflowX={'scroll'}>
       <Table w="full">
         <thead>
           <Tr>
@@ -20,7 +21,7 @@ const FeedbackTable = ({ allFeedback }) => {
           ))}
         </tbody>
       </Table>
-    </>
+    </Box>
   );
 };
 

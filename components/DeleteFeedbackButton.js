@@ -15,7 +15,7 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { deleteFeedback } from "../lib/db";
 import { useSWRConfig } from "swr";
 
-export default function RemoveButton({ feedbackId }) {
+export default function DeleteFeedbackButton({ feedbackId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const { mutate } = useSWRConfig();
@@ -51,7 +51,7 @@ export default function RemoveButton({ feedbackId }) {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onDelete} ml={3}>
+              <Button colorScheme="red" fontWeight="bold" onClick={onDelete} ml={3}>
                 Delete
               </Button>
             </AlertDialogFooter>

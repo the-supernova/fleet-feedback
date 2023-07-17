@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   Box,
   Button,
@@ -7,7 +7,7 @@ import {
   Icon,
   Text,
 } from "@chakra-ui/react";
-import { getAllFeedback } from "../lib/db-admin";
+import { getAllFeedback, getSite } from "../lib/db-admin";
 import Script from "next/script";
 import FeedbackLink from "../components/FeedbackLink";
 import Feedback from "../components/Feedback";
@@ -15,7 +15,7 @@ import LoginButtons from "../components/LoginButtons";
 
 const SITE_ID = "lIlh6QbYfPNo4KHnQ81W";
 
-export default function Home({ allFeedback }) {
+export default function Home({ allFeedback, site }) {
   const { data: session } = useSession();
 
   return (
@@ -86,9 +86,9 @@ export default function Home({ allFeedback }) {
         margin={"0 auto"}
         mt={8}
       >
-        <FeedbackLink siteId={SITE_ID} />
-        {allFeedback.map((feedback) => (
-          <Feedback key={feedback.id} {...feedback} />
+        <FeedbackLink paths={[SITE_ID]} />
+        {allFeedback.map((feedback, index) => (
+          <Feedback key={feedback.id} settings={site?.settings} isLast={index === allFeedback.length - 1} {...feedback} />
         ))}
       </Box>
     </>
@@ -97,10 +97,12 @@ export default function Home({ allFeedback }) {
 
 export async function getStaticProps() {
   const { feedback } = await getAllFeedback(SITE_ID);
+  const { site } = await getSite(SITE_ID);
 
   return {
     props: {
       allFeedback: feedback,
+      site
     },
     revalidate: 1,
   };

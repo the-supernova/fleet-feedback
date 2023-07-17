@@ -29,15 +29,20 @@ export default function AddSiteModal({ children }) {
 
   const {
     handleSubmit,
-    register,
-    formState: { errors },
+    register
   } = useForm();
 
-  const createSiteUtil = async (values) => {
+  const createSiteUtil = async ({ name, url }) => {
     const newSite = {
       authorId: session.user.uid,
       createdAt: new Date().toISOString(),
-      ...values,
+      name,
+      url,
+      settings: {
+        icons: true,
+        timestamp: true,
+        ratings: false,
+      }
     };
     const { id } = await createSite(newSite);
     toast({
