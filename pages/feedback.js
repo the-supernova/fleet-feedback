@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react"
 import useSWR from 'swr'
-import EmptyState from "../components/EmptyState";
 import SiteTableSkeleton from "../components/SiteTableSkeleton";
 import DashboardShell from "../components/DashboardShell";
 import fetcher from "../utils/fetcher";
 import FeedbackTable from "../components/FeedbackTable";
 import FeedbackTableHeader from "../components/FeedbackTableHeader";
+import FeedbackEmptyState from "../components/FeedbackEmptyState";
 
 export default function MyFeedback() {
     const { data: session } = useSession();
@@ -22,7 +22,7 @@ export default function MyFeedback() {
     return (
         <DashboardShell>
             <FeedbackTableHeader />
-            {data.feedback ? (<FeedbackTable allFeedback={data.feedback} />) : (<EmptyState />)}
+            {data.feedback ? (<FeedbackTable allFeedback={data.feedback} />) : (<FeedbackEmptyState />)}
         </DashboardShell>
     )
 }

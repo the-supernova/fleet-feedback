@@ -22,7 +22,7 @@ export default function Dashboard() {
     return (
         <DashboardShell>
             <SiteTableHeader />
-            {data.sites ? (<SiteTable sites={data.sites} />) : (<EmptyState />)}
+            {data.sites.length ? (<SiteTable sites={data.sites} />) : (<EmptyState />)}
         </DashboardShell>
     )
 }
