@@ -1,6 +1,8 @@
 import { SessionProvider } from "next-auth/react";
 import { CSSReset, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { customTheme } from "../styles/theme";
+import { MDXProvider } from "@mdx-js/react";
+import MDXComponents from "../components/MDXComponents";
 
 export default function App({
   Component,
@@ -9,8 +11,10 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ChakraProvider theme={extendTheme(customTheme)}>
-        <CSSReset />
-        <Component {...pageProps} />
+        <MDXProvider components={MDXComponents}>
+          <CSSReset />
+          <Component {...pageProps} />
+        </MDXProvider>
       </ChakraProvider>
     </SessionProvider>
   );
