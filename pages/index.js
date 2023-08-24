@@ -12,6 +12,7 @@ import Script from "next/script";
 import FeedbackLink from "../components/FeedbackLink";
 import Feedback from "../components/Feedback";
 import LoginButtons from "../components/LoginButtons";
+import IframeResizer from "iframe-resizer-react";
 
 const SITE_ID = "lIlh6QbYfPNo4KHnQ81W";
 
@@ -103,10 +104,13 @@ export default function Home({ allFeedback, site }) {
         margin={"0 auto"}
         mt={8}
       >
-        <FeedbackLink paths={[SITE_ID]} />
-        {allFeedback.map((feedback, index) => (
-          <Feedback key={feedback.id} settings={site?.settings} isLast={index === allFeedback.length - 1} {...feedback} />
-        ))}
+        <IframeResizer
+          checkOrigin={false}
+          title="Comments"
+          src="https://fleetfeedback.vercel.app/embed/lIlh6QbYfPNo4KHnQ81W"
+          style={{ width: '1px', minWidth: '100%' }}
+
+         />
       </Box>
     </>
   );
